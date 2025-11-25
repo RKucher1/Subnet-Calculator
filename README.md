@@ -15,6 +15,7 @@ The tool also supports excluding specific IP addresses from the grouping process
 
 - **Flexible CIDR Grouping**: Group IP addresses into /16 or /24 CIDR blocks
 - **IP Exclusion Support**: Exclude specific IPs from the grouping using an exclusion file
+- **Terminal or File Output**: Print results to terminal for quick analysis or save to file for documentation
 - **Automatic Sorting**: IPs are automatically sorted before processing
 - **Summary Statistics**: Provides total subnet count and total host count
 - **Per-Subnet Host Counts**: Shows the number of hosts in each subnet range
@@ -42,34 +43,40 @@ python3 --version
 ### Basic Syntax
 
 ```bash
-python subnet.py <input_file> <output_file> <prefix> [--exclude <exclusion_file>]
+python subnet.py <input_file> <prefix> [output_file] [--exclude <exclusion_file>]
 ```
 
 ### Parameters
 
 - `<input_file>`: Path to the file containing IP addresses (one per line)
-- `<output_file>`: Path where the output will be written
 - `<prefix>`: CIDR prefix length (16 or 24)
+- `[output_file]` (optional): Path where the output will be written. If omitted, results print to terminal
 - `--exclude <exclusion_file>` (optional): Path to file containing IPs to exclude
 
 ### Examples
 
-#### Example 1: Group IPs into /24 subnets
+#### Example 1: Print /24 subnets to terminal
 
 ```bash
-python subnet.py network.txt output.txt 24
+python subnet.py network.txt 24
 ```
 
-#### Example 2: Group IPs into /16 subnets
+#### Example 2: Group IPs into /16 subnets and save to file
 
 ```bash
-python subnet.py network.txt output.txt 16
+python subnet.py network.txt 16 output.txt
 ```
 
-#### Example 3: Group IPs with exclusions
+#### Example 3: Print /24 subnets to terminal with exclusions
 
 ```bash
-python subnet.py network.txt output.txt 24 --exclude exclusions.txt
+python subnet.py network.txt 24 --exclude exclusions.txt
+```
+
+#### Example 4: Save /16 subnets to file with exclusions
+
+```bash
+python subnet.py network.txt 16 output.txt --exclude exclusions.txt
 ```
 
 ## Input File Format
@@ -84,9 +91,9 @@ The input file should contain one IP address per line:
 10.0.0.2
 ```
 
-## Output File Format
+## Output Format
 
-The output file will contain CIDR blocks with host counts:
+The output (either to terminal or file) will contain CIDR blocks with host counts:
 
 ```
 10.0.0.0/24 - Hosts: 2
@@ -96,6 +103,9 @@ The output file will contain CIDR blocks with host counts:
 Total Subnets: 3
 Total Hosts: 5
 ```
+
+When printing to terminal (no output file specified), the results are displayed directly to stdout.
+When an output file is specified, the results are written to the file and a summary is printed to the terminal.
 
 ## Exclusion File Format
 
@@ -113,6 +123,8 @@ The exclusion file should contain one IP address per line (same format as input 
 - **Subnet Optimization**: Determine optimal subnet sizing based on actual usage
 - **Security Analysis**: Identify IP ranges for firewall rules or access controls
 - **Documentation**: Generate subnet documentation from IP lists
+- **Quick Analysis**: View subnet groupings instantly in the terminal without creating files
+- **Penetration Testing**: Quickly organize target IPs by subnet during engagements without leaving artifacts
 
 ## How It Works
 
@@ -121,7 +133,7 @@ The exclusion file should contain one IP address per line (same format as input 
 3. Applies exclusions (if specified)
 4. Groups IPs based on the specified prefix (/16 or /24)
 5. Counts hosts in each subnet range
-6. Writes the results to the output file with summary statistics
+6. Outputs the results to terminal or file (if specified) with summary statistics
 
 ## CIDR Notation
 
